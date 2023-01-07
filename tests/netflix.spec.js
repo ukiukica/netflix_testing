@@ -36,6 +36,11 @@ test("sign in page exists", async({ page }) => {
 
 // email or phone number field exists
 // -||- is empty
+
+// password field exists
+// -||- is empty
+
+
 test.describe("initial conditions", () => {
   test.use({ baseURL: 'https://www.netflix.com'});
 
@@ -67,9 +72,42 @@ test.describe("initial conditions", () => {
   })
 })
 
-// password field exists
-// -||- is empty
+
 // when click "show" it shows the password
+
+test("Password Visibility Button reveals when password input is in focus", async ({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole('link', { name: /sign in/i}).click();
+
+  const passwordInputField = page.getByLabel(/password/i);
+  const passwordVisibilityButton = page.locator("#id_password_toggle");
+
+  await expect(passwordVisibilityButton).toBeHidden();
+  await passwordInputField.focus();
+  await expect(passwordVisibilityButton).toBeVisible();
+  await passwordInputField.blur();
+  await expect(passwordVisibilityButton).toBeHidden();
+
+
+})
+
+test("Password Visibility Button reveals input value when toggled, then obscures it when toggled again", async ({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole('link', { name: /sign in/i}).click();
+
+  const passwordInputField = page.getByLabel(/password/i);
+  const passwordVisibilityButton = page.locator("#id_password_toggle");
+
+  await expect(passwordInputField).toHaveAttribute('type', 'password');
+  await passwordInputField.focus();
+  await expect(passwordVisibilityButton).toBeVisible();
+  await passwordVisibilityButton.click();
+  await expect(passwordInputField).toHaveAttribute('type', 'text');
+  await passwordVisibilityButton.click();
+  await expect(passwordInputField).toHaveAttribute('type', 'password');
+
+
+})
 
 // test("password input field is visible, editable, and empty", async )
 
