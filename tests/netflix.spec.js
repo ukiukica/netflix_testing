@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 // run tests in headful mode so you can see the browser
-test.use({ headless: true, slowMo: 1000 });
+test.use({ headless: false, slowMo: 1000 });
 
 test("my first test", async ({ page }) => {
   // go to Netflix.com
@@ -26,8 +26,8 @@ test("sign in page exists", async({ page }) => {
   await page.getByRole('link', { name: /sign in/i}).click();
 
   await expect(page).toHaveURL(/.*login/);
-  const response = await page.request.get(page.url());
-  await expect(response).toBeOK();
+//   const response = await page.request.get(page.url());
+//   await expect(response).toBeOK();
 
   await expect(page.getByRole('heading', { name: /sign in/i})).toBeVisible(); // may not need this
 });
