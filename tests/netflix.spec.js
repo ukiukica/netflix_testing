@@ -105,8 +105,28 @@ test("Password Visibility Button reveals input value when toggled, then obscures
   await expect(passwordInputField).toHaveAttribute('type', 'text');
   await passwordVisibilityButton.click();
   await expect(passwordInputField).toHaveAttribute('type', 'password');
+})
 
+test("Error alert appears when try to log in with invalid credentials", async ({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole('link', { name: /sign in/i}).click();
 
+  await page.getByLabel(/email or phone number/i).fill("bad@email.com");
+  await page.getByLabel(/password/i).fill("password");
+
+  await page.getByRole('button', { name: /sign in/i}).click();
+
+  await expect(page.getByRole("alert")).toBeVisible();
+})
+
+test("Error messages appear when input fields left blank upon logging in", async({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole('link', { name: /sign in/i}).click();
+
+  await page.getByRole('button', { name: /sign in/i}).click();
+
+  await expect(page.locator('[data-uia="password-field+error"]')).toBeVisible();
+  await expect(page.locator('[data-uia="login-field+error"]')).toBeVisible();
 })
 
 // test("password input field is visible, editable, and empty", async )
