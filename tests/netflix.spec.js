@@ -18,35 +18,45 @@ test("my first test", async ({ page }) => {
 test("Sign in button navigates to Sign in page", async({ page }) => {
   await page.goto("https://www.netflix.com");
 
+  // click on Sign in button
   await page.getByRole('link', { name: /sign in/i}).click();
 
+  // assert page url ends with 'login'
   await expect(page).toHaveURL(/.*login/);
 });
 
 test.describe("Email and Password input fields initial conditions", () => {
   test.use({ baseURL: 'https://www.netflix.com'});
 
-  test("email input field is visible, editable, and empty", async ({ page }) => {
+  test("Email input field is visible, editable, and empty", async ({ page }) => {
     await page.goto("/");
 
     await page.getByRole('link', { name: /sign in/i}).click();
 
+    // locate Email input field
     const emailInputField = page.getByLabel(/email or phone number/i);
 
+    // assert Email input field exists
     await expect(emailInputField).toBeVisible();
+    // assert Email input field is editable
     await expect(emailInputField).toBeEditable();
+    // assert Email input field is empty
     await expect(emailInputField).toBeEmpty();
   });
 
-  test("password input field is visible, editable, and empty", async ({ page }) => {
+  test("Password input field is visible, editable, and empty", async ({ page }) => {
     await page.goto("/");
 
     await page.getByRole('link', { name: /sign in/i}).click();
 
+    // locate Password input field
     const passwordInputField = page.getByLabel(/password/i);
 
+    // assert Password input field exists
     await expect(passwordInputField).toBeVisible();
+    // assert Password input field is editable
     await expect(passwordInputField).toBeEditable();
+    // assert Password input field is empty
     await expect(passwordInputField).toBeEmpty();
   });
 });
@@ -56,6 +66,7 @@ test('"Remember Me" checkbox is checked by default', async ({ page }) => {
 
   await page.getByRole('link', { name: /sign in/i}).click();
 
+  // assert Remember Me checkbox is checked
   await expect(page.getByLabel(/remember me/i)).toBeChecked();
 });
 
@@ -64,17 +75,24 @@ test("Show/Hide Password Button reveals when password input is in focus", async 
 
   await page.getByRole('link', { name: /sign in/i}).click();
 
+  // locate Password input field
   const passwordInputField = page.getByLabel(/password/i);
+  // locate Show/Hide Password Button
   const passwordVisibilityButton = page.locator("#id_password_toggle");
 
+  // assert Show/Hide Password Button is hidden
   await expect(passwordVisibilityButton).toBeHidden();
 
+  // focus on Password input field
   await passwordInputField.focus();
 
+  // assert Show/Hide Password Button is visible
   await expect(passwordVisibilityButton).toBeVisible();
 
+  // unfocus from Password input field
   await passwordInputField.blur();
 
+  // assert Show/Hide Password Button is hidden
   await expect(passwordVisibilityButton).toBeHidden();
 });
 
@@ -83,9 +101,12 @@ test("Show/Hide Password Button reveals input value when toggled, then obscures 
 
   await page.getByRole('link', { name: /sign in/i}).click();
 
+  // locate Password input field
   const passwordInputField = page.getByLabel(/password/i);
+  // locate Show/Hide Password Button
   const passwordVisibilityButton = page.locator("#id_password_toggle");
 
+  // assert Password input field has the type of "password"
   await expect(passwordInputField).toHaveAttribute('type', 'password');
 
   await passwordInputField.focus();
