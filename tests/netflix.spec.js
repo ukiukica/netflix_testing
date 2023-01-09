@@ -15,11 +15,6 @@ test("my first test", async ({ page }) => {
 
 // ADD YOUR TESTS HERE!
 
-// go to sign in page
-// try to sign in with invalid email/pass
-
-// -------------------------------------------
-
 test("sign in page exists", async({ page }) => {
   await page.goto("https://www.netflix.com");
 
@@ -31,15 +26,6 @@ test("sign in page exists", async({ page }) => {
 
   await expect(page.getByRole('heading', { name: /sign in/i})).toBeVisible(); // may not need this
 });
-
-// test initial confitions:
-
-// email or phone number field exists
-// -||- is empty
-
-// password field exists
-// -||- is empty
-
 
 test.describe("initial conditions", () => {
   test.use({ baseURL: 'https://www.netflix.com'});
@@ -129,14 +115,39 @@ test("Error messages appear when input fields left blank upon logging in", async
   await expect(page.locator('[data-uia="login-field+error"]')).toBeVisible();
 })
 
-// test("password input field is visible, editable, and empty", async )
+test('"Need Help" anchor tag opens Login Help page', async ({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole("link", { name: /sign in/i}).click();
 
-// checkbox "remember me" is unchecked
+  await page.getByRole("link", {name: /need help?/i}).click();
 
-// "need help" a tag exists
-// -||- takes you to the page that has "forgot email/password" text
+  await expect(page).toHaveURL(/.*LoginHelp/);
+  const response = await page.request.get(page.url());
+  await expect(response).toBeOK();
+});
 
-// "sign up now" a tag exists
-// -||- takes you to the page that has "sign up now" text
+test('"Sign Up Now" anchor tag opens the Sign Up page', async ({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole("link", { name: /sign in/i}).click();
 
-// check language select field if exists and if works
+  await page.getByRole("link", {name: /sign up now/i}).click();
+
+  await expect(page).toHaveURL(/.*/);
+  const response = await page.request.get(page.url());
+  await expect(response).toBeOK();
+});
+
+test('Selects Spanish from Language select field, then selects English again, each time opening the corresponding page', async ({ page }) => {
+  await page.goto("https://www.netflix.com");
+  await page.getByRole("link", { name: /sign in/i}).click();
+
+  const languageSelector = page.getByPlaceholder("lang-switcher");
+
+  await languageSelector.selectOption("/us-es/login");
+
+  await expect(page).toHaveURL(/.*us-es\/login/);
+
+  await languageSelector.selectOption("/login");
+
+  await expect(page).toHaveURL(/.*login/);
+});
