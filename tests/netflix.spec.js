@@ -16,9 +16,10 @@ test("my first test", async ({ page }) => {
 // ADD YOUR TESTS HERE!
 
 test("Sign in button navigates to Sign in page", async({ page }) => {
+  // go to Netflix.com
   await page.goto("https://www.netflix.com");
 
-  // click on Sign in button
+  // click on Sign in anchor tag
   await page.getByRole('link', { name: /sign in/i}).click();
 
   // assert page url is 'https://www.netflix.com/login/'
@@ -178,26 +179,26 @@ test('"Sign Up Now" anchor tag opens the Sign Up page', async ({ page }) => {
   // click "Sign Up Now" anchor tag
   await page.getByRole("link", {name: /sign up now/i}).click();
 
-  // assert url is "https://www.netflix.com"
+  // assert url is "https://www.netflix.com/"
   await expect(page).toHaveURL(/.*/);
 });
 
-test('Selects Spanish from Language select field, then selects English again, each time opening the corresponding page', async ({ page }) => {
+test('Selects languages from Language select field, each time opening the corresponding page', async ({ page }) => {
   await page.goto("https://www.netflix.com");
 
   await page.getByRole("link", { name: /sign in/i}).click();
 
   // locate Language select field
-  const languageSelector = page.getByPlaceholder("lang-switcher");
+  const languageSelectField = page.getByPlaceholder("lang-switcher");
 
-  // select option with value "/us-es/login" on Language select field
-  await languageSelector.selectOption("/us-es/login");
+  // select Español option with value "/us-es/login" on Language select field
+  await languageSelectField.selectOption("/us-es/login");
 
   // assert url is "https://www.netflix.com/us-es/login/"
   await expect(page).toHaveURL(/.*us-es\/login/);
 
-  // select option with value "/login" on Language select field
-  await languageSelector.selectOption("/login");
+  // select English option with value "/login" on Language select field
+  await languageSelectField.selectOption("/login");
 
   // assert url is "https://www.netflix.com/login/"
   await expect(page).toHaveURL(/.*login/);
