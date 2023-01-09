@@ -64,7 +64,7 @@ test.describe('Show/Hide Password Button functionality', () => {
   test.use({ baseURL: "https://www.netflix.com/login"});
 
   test('Show/Hide Password Button reveals when password input is in focus', async ({ page }) => {
-    await page.goto("h/");
+    await page.goto("/");
 
     await page.getByRole("link", { name: /sign in/i}).click();
 
