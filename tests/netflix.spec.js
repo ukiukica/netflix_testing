@@ -15,10 +15,10 @@ test("My first test", async ({ page }) => {
 
 // ADD YOUR TESTS HERE!!
 
-test('Sign In Button navgates to sign in page', async({ page }) => {
+test("Sign In Button navigates to sign in page", async ({ page }) => {
   await page.goto("https://www.netflix.com");
 
-  await page.getByRole("link", { name: /sign in/i}).click();
+  await page.getByRole("link", { name: /sign in/i }).click();
 
   await expect(page).toHaveURL(/.*login/);
 
@@ -27,12 +27,12 @@ test('Sign In Button navgates to sign in page', async({ page }) => {
 });
 
 test.describe("Input fields initial condition", () => {
-  test.use({ baseURL: "https://www.netflix.com/login"});
+  test.use({ baseURL: "https://www.netflix.com/login" });
 
-  test('Email input field is visible, editable, and empty', async ({ page }) => {
-    await page.goto("/");
+  test("Email input field is visible, editable, and empty", async ({ page }) => {
+    await page.goto("https://www.netflix.com/login");
 
-    await page.getByRole("link", { name: /sign in/i}).click();
+    await page.getByRole("link", { name: /sign in/i }).click();
     const emailInputField = page.getByLabel(/email or phone number/i);
 
     await expect(emailInputField).toBeVisible();
@@ -40,10 +40,10 @@ test.describe("Input fields initial condition", () => {
     await expect(emailInputField).toBeEmpty();
   });
 
-  test('Password input field is visible, editable, and empty', async ({ page }) => {
-    await page.goto("/");
+  test("Password input field is visible, editable, and empty", async ({ page }) => {
+    await page.goto("https://www.netflix.com/login");
 
-    await page.getByRole("link", { name: /sign in/i}).click();
+    await page.getByRole("link", { name: /sign in/i }).click();
     const passwordInputField = page.getByLabel(/password/i);
 
     await expect(passwordInputField).toBeVisible();
@@ -55,82 +55,74 @@ test.describe("Input fields initial condition", () => {
 test('"Remember Me" checkbox is checked by default', async ({ page }) => {
   await page.goto("https://www.netflix.com/login");
 
-  await page.getByRole("link", { name: /sign in/i}).click();
+  await page.getByRole("link", { name: /sign in/i }).click();
 
   await expect(page.getByLabel(/remember me/i)).toBeChecked();
 });
 
-test.describe('Show/Hide Password Button functionality', () => {
-  test.use({ baseURL: "https://www.netflix.com/login"});
+test("Show/Hide Password Button reveals when password input is in focus", async ({ page }) => {
+  await page.goto("https://www.netflix.com/login");
 
-  test('Show/Hide Password Button reveals when password input is in focus', async ({ page }) => {
-    await page.goto("/");
+  await page.getByRole("link", { name: /sign in/i }).click();
 
-    await page.getByRole("link", { name: /sign in/i}).click();
+  const passwordInputField = page.getByLabel(/password/i);
+  const passwordVisibilityButton = page.locator("#id_password_toggle");
 
-    const passwordInputField = page.getByLabel(/password/i);
-    const passwordVisibilityButton = page.locator("#id_password_toggle");
+  await expect(passwordVisibilityButton).toBeHidden();
 
-    await expect(passwordVisibilityButton).toBeHidden();
+  await passwordInputField.focus();
 
-    await passwordInputField.focus();
+  await expect(passwordVisibilityButton).toBeVisible();
 
-    await expect(passwordVisibilityButton).toBeVisible();
+  await passwordInputField.blur();
 
-    await passwordInputField.blur();
-
-    await expect(passwordVisibilityButton).toBeHidden();
-  });
-
-  test('Show/Hide Password Button reveals input value when toggled, then obscures it when toggled again', async ({ page }) => {
-    await page.goto("/");
-
-    const passwordInputField = page.getByLabel(/password/i);
-    const passwordVisibilityButton = page.locator("#id_password_toggle");
-
-    await expect(passwordInputField).toHaveAttribute("type", "password");
-
-    await passwordInputField.focus();
-
-    await expect(passwordVisibilityButton).toBeVisible();
-
-    await passwordVisibilityButton.click();
-
-    await expect(passwordInputField).toHaveAttribute("type", "text");
-
-    await passwordVisibilityButton.click();
-
-    await expect(passwordInputField).toHaveAttribute("type", "password");
-  });
+  await expect(passwordVisibilityButton).toBeHidden();
 });
 
-test.describe('Login functionality', () => {
-  test.use({ baseURL: "https://www.netflix.com/login"});
+test("Show/Hide Password Button reveals input value when toggled, then obscures it when toggled again", async ({ page }) => {
+  await page.goto("https://www.netflix.com/login");
 
-  test('Error alert appears when try to log in with invalid credentials', async ({ page }) => {
-    await page.goto("/");
+  const passwordInputField = page.getByLabel(/password/i);
+  const passwordVisibilityButton = page.locator("#id_password_toggle");
 
-    await page.getByLabel(/email or phone number/i).fill("bad@email.com");
-    await page.getByLabel(/password/i).fill("password");
-    await page.getByRole("button", { name: /sign in/i}).click();
+  await expect(passwordInputField).toHaveAttribute("type", "password");
 
-    await expect(page.getByRole("alert")).toBeVisible();
-  });
+  await passwordInputField.focus();
 
-  test('Error messages appear when input fields left blank upon logging in', async({ page }) => {
-    await page.goto("/");
+  await expect(passwordVisibilityButton).toBeVisible();
 
-    await page.getByRole("button", { name: /sign in/i}).click();
+  await passwordVisibilityButton.click();
 
-    await expect(page.locator('[data-uia="password-field+error"]')).toBeVisible();
-    await expect(page.locator('[data-uia="login-field+error"]')).toBeVisible();
-  });
+  await expect(passwordInputField).toHaveAttribute("type", "text");
+
+  await passwordVisibilityButton.click();
+
+  await expect(passwordInputField).toHaveAttribute("type", "password");
+});
+
+test("Error alert appears when try to log in with invalid credentials", async ({ page }) => {
+  await page.goto("https://www.netflix.com/login");
+
+  await page.getByLabel(/email or phone number/i).fill("bad@email.com");
+  await page.getByLabel(/password/i).fill("password");
+  await page.getByRole("button", { name: /sign in/i }).click();
+
+  await expect(page.getByRole("alert")).toBeVisible();
+});
+
+test("Error messages appear when input fields left blank upon logging in", async ({ page }) => {
+  await page.goto("https://www.netflix.com/login");
+
+  await page.getByRole("button", { name: /sign in/i }).click();
+
+  await expect(page.locator('[data-uia="password-field+error"]')).toBeVisible();
+  await expect(page.locator('[data-uia="login-field+error"]')).toBeVisible();
 });
 
 test('"Need Help" anchor tag opens Login Help page', async ({ page }) => {
   await page.goto("https://www.netflix.com/login");
 
-  await page.getByRole("link", {name: /need help?/i}).click();
+  await page.getByRole("link", { name: /need help?/i }).click();
 
   await expect(page).toHaveURL(/.*LoginHelp/);
 
@@ -141,7 +133,7 @@ test('"Need Help" anchor tag opens Login Help page', async ({ page }) => {
 test('"Sign Up Now" anchor tag opens the Sign Up page', async ({ page }) => {
   await page.goto("https://www.netflix.com/login");
 
-  await page.getByRole("link", {name: /sign up now/i}).click();
+  await page.getByRole("link", { name: /sign up now/i }).click();
 
   await expect(page).toHaveURL(/.*/);
 
@@ -149,7 +141,7 @@ test('"Sign Up Now" anchor tag opens the Sign Up page', async ({ page }) => {
   await expect(response).toBeOK();
 });
 
-test('Selects Spanish from Language select field, then selects English again, each time opening the corresponding page', async ({ page }) => {
+test("Selects languages from Language select field, each time opening the corresponding page", async ({ page }) => {
   await page.goto("https://www.netflix.com/login");
 
   const languageSelector = page.getByPlaceholder("lang-switcher");
