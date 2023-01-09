@@ -32,7 +32,6 @@ test.describe("Input fields initial condition", () => {
   test("Email input field is visible, editable, and empty", async ({ page }) => {
     await page.goto("https://www.netflix.com/login");
 
-    await page.getByRole("link", { name: /sign in/i }).click();
     const emailInputField = page.getByLabel(/email or phone number/i);
 
     await expect(emailInputField).toBeVisible();
@@ -43,7 +42,6 @@ test.describe("Input fields initial condition", () => {
   test("Password input field is visible, editable, and empty", async ({ page }) => {
     await page.goto("https://www.netflix.com/login");
 
-    await page.getByRole("link", { name: /sign in/i }).click();
     const passwordInputField = page.getByLabel(/password/i);
 
     await expect(passwordInputField).toBeVisible();
@@ -55,15 +53,11 @@ test.describe("Input fields initial condition", () => {
 test('"Remember Me" checkbox is checked by default', async ({ page }) => {
   await page.goto("https://www.netflix.com/login");
 
-  await page.getByRole("link", { name: /sign in/i }).click();
-
   await expect(page.getByLabel(/remember me/i)).toBeChecked();
 });
 
 test("Show/Hide Password Button reveals when password input is in focus", async ({ page }) => {
   await page.goto("https://www.netflix.com/login");
-
-  await page.getByRole("link", { name: /sign in/i }).click();
 
   const passwordInputField = page.getByLabel(/password/i);
   const passwordVisibilityButton = page.locator("#id_password_toggle");
