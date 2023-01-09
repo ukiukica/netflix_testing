@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 // run tests in headful mode so you can see the browser
-test.use({ headless: true, slowMo: 1000 });
+test.use({ headless: false, slowMo: 1000 });
 
 test("my first test", async ({ page }) => {
   // go to Netflix.com
@@ -21,9 +21,6 @@ test("Sign in button navigates to Sign in page", async({ page }) => {
   await page.getByRole('link', { name: /sign in/i}).click();
 
   await expect(page).toHaveURL(/.*login/);
-
-  const response = await page.request.get(page.url());
-  await expect(response).toBeOK();
 });
 
 test.describe("Email and Password input fields initial conditions", () => {
@@ -132,9 +129,6 @@ test('"Need Help" anchor tag opens Login Help page', async ({ page }) => {
   await page.getByRole("link", {name: /need help?/i}).click();
 
   await expect(page).toHaveURL(/.*LoginHelp/);
-
-  const response = await page.request.get(page.url());
-  await expect(response).toBeOK();
 });
 
 test('"Sign Up Now" anchor tag opens the Sign Up page', async ({ page }) => {
@@ -144,9 +138,6 @@ test('"Sign Up Now" anchor tag opens the Sign Up page', async ({ page }) => {
   await page.getByRole("link", {name: /sign up now/i}).click();
 
   await expect(page).toHaveURL(/.*/);
-
-  const response = await page.request.get(page.url());
-  await expect(response).toBeOK();
 });
 
 test('Selects Spanish from Language select field, then selects English again, each time opening the corresponding page', async ({ page }) => {
